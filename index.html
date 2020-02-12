@@ -2,24 +2,75 @@
 <head>
   <meta charset="utf-8">
 
-  <title>The HTML5 Herald</title>
+  <title>Giants Studio</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <p>Giantsstudio</p>
 
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
   
+  <div id="info">Coming soon 2020...</div>
 
-
-  <script src="js/scripts.js"></script>
+  <script src="js/three.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   
+  <script>
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(75,window.innerWidth/    window.innerHeight, 0.1, 1000 );
+camera.position.z = 3;
+camera.position.x = 0;
+
+
+var renderer = new THREE.WebGLRenderer({antialias: true});
+renderer.setClearColor("#e5e5e5");
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+})
+
+
+
+var geometry = new THREE.BoxGeometry(1,1,1);
+var material = new THREE.MeshLambertMaterial({color: 0xb2b2b2});
+var mesh = new THREE.Mesh(geometry, material);
+
+
+mesh.position.x = 0;
+
+scene.add(mesh);
+
+var light = new THREE.PointLight( 0x404040, 1, 500 )
+light.position.set(10,0,25);
+scene.add(light);
+
+var render = function(){
+  requestAnimationFrame(render);
+
+  
+
+  mesh.rotation.z += 0.01;
+  mesh.rotation.y += 0.01;
+  mesh.rotation.x += 0.01;
+
+  renderer.render(scene, camera);
+}
+
+render();
+
+  </script>
 
 </body>
 </html>
