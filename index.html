@@ -52,6 +52,9 @@
 
         var createScene = function () {
             var scene = new BABYLON.Scene(engine);
+            scene.gravity = new BABYLON.Vector3(0, -0.9, 0);
+            scene.collisionsEnabled = true;
+            
 
             createCamera();
 
@@ -60,6 +63,27 @@
             createFightingRing();
 
             createGladiator();
+
+            var box = BABYLON.Mesh.CreateBox("crate", 50, scene);
+            box.material = new BABYLON.StandardMaterial("Mat", scene);
+            box.material.diffuseTexture = new BABYLON.Texture("asset/sand/sand_baseColor.png", scene);
+            box.material.diffuseTexture.hasAlpha = true;
+            box.position = new BABYLON.Vector3(0, -130, 100);
+            box.checkCollisions = true;
+            box.applyGravity = true;
+            box.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+
+            BABYLON.SceneLoader.ImportMesh("", "asset/sand/", "sand.glb", scene, function(groundMeshes){
+            groundMeshes[0].name = "sandGround";
+            var groundMeshes = groundMeshes[0];
+            groundMeshes.position = new BABYLON.Vector3(0, 0, 0)
+            });
+            BABYLON.SceneLoader.ImportMesh("", "asset/stadium/", "stadium.glb", scene, function(stadiumMeshes){
+            newMeshes[0].name = "stadium";
+            var stadiumMeshes = stadiumMeshes[0];
+            stadiumMeshes.position = new BABYLON.Vector3(0, 0, 0)
+            stadiumMeshes.checkCollisions = true;
+            });
 
             var inputMap ={};
             scene.actionManager = new BABYLON.ActionManager(scene);
@@ -70,9 +94,12 @@
                 inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
             }));
 
-            BABYLON.SceneLoader.ImportMesh("", "asset/Dude/", "dude.babylon", scene, function (newMeshes, particleSystems, skeletons) {
+                BABYLON.SceneLoader.ImportMesh("", "asset/Dude/", "dude.babylon", scene, function (newMeshes, particleSystems, skeletons) {
                 var maximus = newMeshes[0];
-                maximus.position.y += 20;
+                maximus.position.y = -165;
+                maximus.checkCollisions = true;
+                maximus.applyGravity = true;
+                maximus.ellipsoid = new BABYLON.Vector3(1, 1, 1);
                 try{
                     
                 var skeleton = skeletons[0];
@@ -144,22 +171,14 @@
         })
         }catch(e){console.log(e)}
     });
+            
            
 
             return scene;
         }
 
         function createFightingRing(){
-            var ground = new BABYLON.SceneLoader.ImportMesh("", "Sand/", "sandRing.glb", scene, function(newMeshes){
-            newMeshes[0].name = "sandGround";
-            var childMeshes = newMeshes[0];
-            childMeshes.position = new BABYLON.Vector3(0, 0, -80)
-            for (var i = 0; i<childMeshes.length; i++){
-                childMeshes[i].layerMask = 1;
-            }
-
-            
-            });
+        
         }
 
         function createGladiator(){
@@ -173,8 +192,13 @@
         function createCamera(){
                 var camera = new BABYLON.FreeCamera("myCam", new BABYLON.Vector3(0,2,-30), scene);
                 camera.position.y = 350;
-                camera.position.z = -450;
-                camera.rotation.x = 0.8;
+                camera.position.z = -620;
+                camera.position.x = -380;
+                camera.rotation.x = 0.5;
+                camera.rotation.y = 0.5;
+               
+
+                camera.attachControl(canvas, true);
         }
 
         window.addEventListener("resize", function () {
